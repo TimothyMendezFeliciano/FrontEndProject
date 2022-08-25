@@ -1,6 +1,9 @@
 const navigation = [
     {
         name: 'Home', href: '/'
+    },
+    {
+        name: 'Excercises', href: '/excercises'
     }
 ]
 

@@ -1,4 +1,3 @@
-import {ReactElement, useEffect, useRef, useState} from "react";
 import CarouselImage from "../Carousel/Image";
 
 export default function Landing() {
