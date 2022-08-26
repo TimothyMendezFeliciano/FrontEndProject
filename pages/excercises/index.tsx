@@ -2,11 +2,14 @@ import {NextPage} from "next";
 import Wrapper from "../../components/Wrapper";
 import {useMutation, useQuery} from "@apollo/client";
 import {GET_EXCERCISES} from "../../graphql/queries/excerciseQueries";
-import {DELETE_EXCERCISE} from "../../graphql/mutations/excerciseMutations";
+import {ADD_EXCERCISE, DELETE_EXCERCISE} from "../../graphql/mutations/excerciseMutations";
 import {XIcon} from '@heroicons/react/solid'
 import ListsWithIcon from "../../components/Lists/WithIcon";
 import FormCardWithLabel from "../../components/Forms/CardWithLabel";
 import Input from "../../components/Inputs/Input";
+import {useMemo, useState} from "react";
+import {ListWithIconInterface} from "../../models/ListWithIconInterface";
+import {ExcercisesModel} from "../../models/GraphQL/ExcercisesModel";
 
 const Excercises: NextPage = () => {
 
@@ -25,7 +28,42 @@ const Excercises: NextPage = () => {
         }
     })
 
-    const deleteAction = (id: string) => {
+    // const [addExcercise] = useMutation(ADD_EXCERCISE, {
+    //     variables: {name: ''},
+    //     update(cache, {data: {addExcercise}}) {
+    //         const {excercises} = cache.readQuery({query: GET_EXCERCISES})
+    //         cache.writeQuery({
+    //             query: GET_EXCERCISES,
+    //             data: {excercises: [...excercises, addExcercise]}
+    //         })
+    //     }
+    // })
+
+    const [excerciseToAdd, setExcerciseToAdd] = useState<string>('')
+
+    const dataToDisplay: ListWithIconInterface[] = useMemo(() => {
+        const result: ListWithIconInterface[] = [];
+        if (data) {
+            data.excercises.forEach(({id, name}: ExcercisesModel) => {
+                result.push({
+                    id,
+                    title: name,
+                    icon: XIcon,
+                })
+            })
+            return result
+        }
+        return []
+    }, [data])
+
+    // const addExcerciseAction = (name: string) => {
+    //     addExcercise({
+    //         variables: {name}
+    //     })
+    // }
+
+    // This method is sent as the callback function to a button. Meant to be used on the onClick property.
+    const deleteExcerciseAction = (id: string) => {
         deleteExcercise({
             variables: {id}
         })
@@ -37,54 +75,19 @@ const Excercises: NextPage = () => {
             <FormCardWithLabel
                 title={'Excercises'}
                 subtitle={'Add another to the global list of excercises'}
-                formInputs={[<Input key={'123'} id={'123'}
-                                    value={123}
-                                    onChange={(e: any) => {
-                                        console.log(e.target.value)
-                                    }}
-                                    type={'text'}
-                                    label={'Add Excercise'}
-                />, <Input key={'124'} id={'124'}
-                           value={123}
-                           onChange={(e: any) => {
-                               console.log(e.target.value)
-                           }}
+                formInputs={[
+                    // This is an input component. Create another similar component called InputWithAction and add the button to that one.
+                    // The difference would be Input component doesn't have a button, while InputWithAction does.
+                    // Be sure to add a callback property so we can send the addExcerciseAction
+                    <Input key={'excerciseToAdd'} id={'excerciseToAdd'}
+                           value={excerciseToAdd}
+                           onChange={setExcerciseToAdd}
                            type={'text'}
                            label={'Add Excercise'}
-                />, <Input key={'125'} id={'125'}
-                           value={123}
-                           onChange={(e: any) => {
-                               console.log(e.target.value)
-                           }}
-                           type={'text'}
-                           label={'Add Excercise'}
-                />]}
+                    />
+                ]}
             />
-            <ListsWithIcon label={'All Excercises'} listToDisplay={[{
-                title: 'example',
-                subtitle: 'example',
-                id: '1',
-                imageURL: '/images/neuromancerIcon.jpg',
-                icon: XIcon,
-            }, {
-                title: 'example',
-                subtitle: 'example',
-                id: '1',
-                imageURL: '/images/neuromancerIcon.jpg',
-                icon: XIcon,
-            }, {
-                title: 'example',
-                subtitle: 'example',
-                id: '1',
-                imageURL: '/images/neuromancerIcon.jpg',
-                icon: XIcon,
-            }, {
-                title: 'example',
-                subtitle: 'example',
-                id: '1',
-                imageURL: '/images/neuromancerIcon.jpg',
-                icon: XIcon,
-            }]} callback={deleteAction}/>
+            <ListsWithIcon label={'All Excercises'} listToDisplay={dataToDisplay} callback={deleteExcerciseAction}/>
         </Wrapper>
     )
 }
