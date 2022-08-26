@@ -5,7 +5,8 @@ import {GET_EXCERCISES} from "../../graphql/queries/excerciseQueries";
 import {DELETE_EXCERCISE} from "../../graphql/mutations/excerciseMutations";
 import {XIcon} from '@heroicons/react/solid'
 import ListsWithIcon from "../../components/Lists/WithIcon";
-import TwoColumnDescriptionForm from "../../components/Forms/TwoColumnDescription";
+import FormCardWithLabel from "../../components/Forms/CardWithLabel";
+import Input from "../../components/Inputs/Input";
 
 const Excercises: NextPage = () => {
 
@@ -33,33 +34,57 @@ const Excercises: NextPage = () => {
     return (
         <Wrapper title={'Timothy\'s Boilerplate'}
                  description={'A FrontEnd for every single project I want to practice'}>
-            <TwoColumnDescriptionForm title={'Excercises'} description={'Review our global list of excercises or add your own.'}>
-                <ListsWithIcon label={'All Excercises'} listToDisplay={[{
-                    title: 'example',
-                    subtitle: 'example',
-                    id: '1',
-                    imageURL: '/images/neuromancerIcon.jpg',
-                    icon: XIcon,
-                }, {
-                    title: 'example',
-                    subtitle: 'example',
-                    id: '1',
-                    imageURL: '/images/neuromancerIcon.jpg',
-                    icon: XIcon,
-                }, {
-                    title: 'example',
-                    subtitle: 'example',
-                    id: '1',
-                    imageURL: '/images/neuromancerIcon.jpg',
-                    icon: XIcon,
-                }, {
-                    title: 'example',
-                    subtitle: 'example',
-                    id: '1',
-                    imageURL: '/images/neuromancerIcon.jpg',
-                    icon: XIcon,
-                }]} callback={deleteAction}/>
-            </TwoColumnDescriptionForm>
+            <FormCardWithLabel
+                title={'Excercises'}
+                subtitle={'Add another to the global list of excercises'}
+                formInputs={[<Input key={'123'} id={'123'}
+                                    value={123}
+                                    onChange={(e: any) => {
+                                        console.log(e.target.value)
+                                    }}
+                                    type={'text'}
+                                    label={'Add Excercise'}
+                />, <Input key={'124'} id={'124'}
+                           value={123}
+                           onChange={(e: any) => {
+                               console.log(e.target.value)
+                           }}
+                           type={'text'}
+                           label={'Add Excercise'}
+                />, <Input key={'125'} id={'125'}
+                           value={123}
+                           onChange={(e: any) => {
+                               console.log(e.target.value)
+                           }}
+                           type={'text'}
+                           label={'Add Excercise'}
+                />]}
+            />
+            <ListsWithIcon label={'All Excercises'} listToDisplay={[{
+                title: 'example',
+                subtitle: 'example',
+                id: '1',
+                imageURL: '/images/neuromancerIcon.jpg',
+                icon: XIcon,
+            }, {
+                title: 'example',
+                subtitle: 'example',
+                id: '1',
+                imageURL: '/images/neuromancerIcon.jpg',
+                icon: XIcon,
+            }, {
+                title: 'example',
+                subtitle: 'example',
+                id: '1',
+                imageURL: '/images/neuromancerIcon.jpg',
+                icon: XIcon,
+            }, {
+                title: 'example',
+                subtitle: 'example',
+                id: '1',
+                imageURL: '/images/neuromancerIcon.jpg',
+                icon: XIcon,
+            }]} callback={deleteAction}/>
         </Wrapper>
     )
 }

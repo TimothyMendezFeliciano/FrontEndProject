@@ -1,6 +1,4 @@
 type PropTypes = {
-    classNameOverwrite?: string
-    classNameExtended?: string
     type?: 'number' | 'datetime-local' | 'text'
     label?: string
     id: string,
@@ -13,8 +11,6 @@ type PropTypes = {
 
 
 export default function Input({
-                                  classNameExtended,
-                                  classNameOverwrite,
                                   type = 'text',
                                   label = 'Default label',
                                   id,
@@ -25,7 +21,6 @@ export default function Input({
                                   min = 1,
                                   max = 100,
                               }: PropTypes) {
-    const className = classNameOverwrite || `${classNameExtended}`
 
     const props = {
         number: {
@@ -66,7 +61,7 @@ export default function Input({
     }
 
     return (
-        <label htmlFor={id} className={className}>
+        <label htmlFor={id}>
             <strong>{label}</strong>
             <input {...props[type]}/>
         </label>
