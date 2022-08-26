@@ -1,6 +1,7 @@
 import {ReactElement} from "react";
 import Head from "next/head";
 import Header from "../Header";
+import Footer from "../Footer";
 
 type PropTypes = {
     children?: (ReactElement | string | boolean)[] | (ReactElement | string | boolean),
@@ -22,12 +23,13 @@ export default function Wrapper({children, title, description}: PropTypes) {
                     sizes={'32x32'}
                     href={'/neuromancerIcon.jpg'}
                 />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon.ico"/>
             </Head>
-            <Header />
+            <Header/>
             <div className={'py-10 max-w-7xl mx-auto px-2 sm:px-4 lg:px-8'}>
                 {children}
             </div>
+            <Footer/>
         </div>
     )
 }
