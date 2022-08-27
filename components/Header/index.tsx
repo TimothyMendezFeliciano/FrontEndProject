@@ -28,9 +28,9 @@ export default function Header() {
                         </div>
                     </div>
                     <div className="ml-10 space-x-4">
-                        {/*<Account triedToEagerConnect={triedToEagerConnect}/>*/}
+                        <Account triedToEagerConnect={triedToEagerConnect}/>
                         {/*@ts-ignore*/}
-                        <neftify-connect-wallet></neftify-connect-wallet>
+                        {/*<neftify-connect-wallet></neftify-connect-wallet>*/}
                     </div>
                 </div>
                 <div className="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">
