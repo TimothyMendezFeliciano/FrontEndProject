@@ -62,12 +62,12 @@ const Excercises: NextPage = () => {
     //     })
     // }
 
-    // This method is sent as the callback function to a button. Meant to be used on the onClick property.
-    const deleteExcerciseAction = (id: string) => {
-        deleteExcercise({
-            variables: {id}
-        })
-    }
+   const deleteExcerciseAction = (id: string) => {
+       deleteExcercise({
+           variables: {id}
+       })
+   }
+
 
     return (
         <Wrapper title={'Timothy\'s Boilerplate'}

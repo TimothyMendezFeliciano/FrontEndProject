@@ -24,6 +24,12 @@ export default function Wrapper({children, title, description}: PropTypes) {
                     href={'/neuromancerIcon.jpg'}
                 />
                 <link rel="icon" href="/favicon.ico"/>
+                {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+                <script type="module"
+                        src="https://cdn.jsdelivr.net/npm/@neftify/connect/dist/neftify/neftify.esm.js"></script>
+                {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+                <script noModule src="https://cdn.jsdelivr.net/npm/@neftify/connect/dist/esm/neftify.js"></script>
+
             </Head>
             <Header/>
             <div className={'py-10 max-w-7xl mx-auto px-2 sm:px-4 lg:px-8'}>
