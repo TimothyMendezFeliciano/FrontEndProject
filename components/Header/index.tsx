@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {navigation, creatorNavigation, userNavigation} from "./navigation";
+import {creatorNavigation, userNavigation} from "./navigation";
 import {useWeb3React} from "@web3-react/core";
 import useEagerConnect from "../../hooks/useEagerConnect";
 import useContract from "../../hooks/useContract";
