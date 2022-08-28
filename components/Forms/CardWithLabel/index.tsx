@@ -1,13 +1,16 @@
 import Input from "../../Inputs/Input";
+import {CallToAction} from "../../../models/CallToAction";
+import {PlusCircleIcon} from "@heroicons/react/solid";
 
 interface PropTypes {
     title: string
     subtitle: string
     formInputs: any[]
+    action: CallToAction
 }
 
 
-export default function FormCardWithLabel({title, subtitle, formInputs}: PropTypes) {
+export default function FormCardWithLabel({title, subtitle, formInputs, action}: PropTypes) {
 
     return (
         <form className={'space-y-6'}>
@@ -25,6 +28,11 @@ export default function FormCardWithLabel({title, subtitle, formInputs}: PropTyp
                                     {formInput}
                                 </div>
                             ))}
+                            <div>
+                                <button onClick={action.callback} className={'btn-plus-icon'}>
+                                    <PlusCircleIcon className={'h-6 w-6'}/>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
