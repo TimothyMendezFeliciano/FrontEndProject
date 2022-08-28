@@ -8,8 +8,10 @@ import {subscriptionNFTABI} from "../../contracts/SubscriptionNFTABI";
 import {useEffect, useMemo, useState} from "react";
 import Account from "../Account";
 import WithdrawButton from "../WithdrawButton";
+import {useRouter} from "next/router";
 
 export default function Header() {
+    const router = useRouter()
     const {account, library} = useWeb3React()
     const triedToEagerConnect = useEagerConnect()
     const subscriptionNFTContract = useContract(subscriptionNFTAddress, subscriptionNFTABI);
@@ -33,7 +35,7 @@ export default function Header() {
             checkIfValid()
         }
         setNavigationTabsLoading(false)
-    }, [subscriptionNFTContract, account])
+    }, [subscriptionNFTContract, account, router])
 
 
     const isConnected = typeof account === "string" && !!library

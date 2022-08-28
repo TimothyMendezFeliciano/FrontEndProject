@@ -11,8 +11,9 @@ export const DELETE_EXCERCISE = gql(`
 `)
 
 export const ADD_EXCERCISE = gql(`
-    mutation addExcercise($name: String) {
+    mutation addExcercise($name: String!) {
         addExcercise(name: $name) {
+            id
             name
         }
     }

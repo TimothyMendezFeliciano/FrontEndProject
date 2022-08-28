@@ -16,28 +16,32 @@ const Excercises: NextPage = () => {
     const {loading, error, data} = useQuery(GET_EXCERCISES)
     const [deleteExcercise] = useMutation(DELETE_EXCERCISE, {
         variables: {id: ''},
-        update(cache, {data: {deleteExcercise}}) {
+        refetchQueries: [{query: GET_EXCERCISES}]
+        // update(cache, {data: {deleteExcercise}}) {
+        //     const {excercises} = cache.readQuery({
+        //         query: GET_EXCERCISES
+        //     });
+        //
+        //     cache.writeQuery({
+        //         query: GET_EXCERCISES,
+        //         data: {excercises: excercises.filter(excercise => excercise.id !== deleteExcercise.id)}
+        //     });
+        // }
+    })
+
+    const [addExcercise] = useMutation(ADD_EXCERCISE, {
+        variables: {name: ''},
+        // refetchQueries: [{query: GET_EXCERCISES}]
+        update(cache, {data: {addExcercise}}) {
             const {excercises} = cache.readQuery({
                 query: GET_EXCERCISES
             });
-
             cache.writeQuery({
                 query: GET_EXCERCISES,
-                data: {excercises: excercises.filter(excercise => excercise.id !== deleteExcercise.id)}
-            });
+                data: {excercises: [...excercises, addExcercise]}
+            })
         }
     })
-
-    // const [addExcercise] = useMutation(ADD_EXCERCISE, {
-    //     variables: {name: ''},
-    //     update(cache, {data: {addExcercise}}) {
-    //         const {excercises} = cache.readQuery({query: GET_EXCERCISES})
-    //         cache.writeQuery({
-    //             query: GET_EXCERCISES,
-    //             data: {excercises: [...excercises, addExcercise]}
-    //         })
-    //     }
-    // })
 
     const [excerciseToAdd, setExcerciseToAdd] = useState<string>('')
 
@@ -93,7 +97,8 @@ const Excercises: NextPage = () => {
                 }}
             />
 
-            <ListsWithIcon label={'All Excercises'} listToDisplay={dataToDisplay} callback={deleteExcerciseAction}/>
+            <ListsWithIcon label={'All Excercises'} listToDisplay={dataToDisplay}
+                           callback={(item) => deleteExcerciseAction(item.id)}/>
         </Wrapper>
     )
 }
