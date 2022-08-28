@@ -15,8 +15,8 @@ export default function Header() {
     const {account, library} = useWeb3React()
     const triedToEagerConnect = useEagerConnect()
     const subscriptionNFTContract = useContract(subscriptionNFTAddress, subscriptionNFTABI);
-    const [hasValidSubscription, setHasValidSubscription] = useState()
-    const [isContentCreator, setIsContentCreator] = useState()
+    const [hasValidSubscription, setHasValidSubscription] = useState(false)
+    const [isContentCreator, setIsContentCreator] = useState(false)
     const [navigationTabsLoading, setNavigationTabsLoading] = useState(true)
     const navigationTabs = useMemo(() => {
         if (isContentCreator) return creatorNavigation
@@ -59,7 +59,7 @@ export default function Header() {
                     </div>
                     <div className="ml-10 space-x-4">
                         <Account triedToEagerConnect={triedToEagerConnect}/>
-                        {isContentCreator && <WithdrawButton triedToEagerConnect={triedToEagerConnect}/>}
+                        {!navigationTabsLoading && isContentCreator && <WithdrawButton triedToEagerConnect={triedToEagerConnect} isContentCreator={isContentCreator}/>}
                     </div>
                 </div>
                 <div className="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">

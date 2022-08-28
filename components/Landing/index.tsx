@@ -1,7 +1,9 @@
 import CarouselImage from "../Carousel/Image";
+import {useAppDispatch} from "../../hooks/useRedux";
+import {openModal} from "../Modals/ModalSlice";
 
 export default function Landing() {
-
+    const dispatch = useAppDispatch()
     return (
         <div className={'lg:relative'}>
             <div className="mx-auto max-w-7xl w-full pt-16 pb-20 text-center lg:py-48 lg:text-left">
@@ -26,9 +28,10 @@ export default function Landing() {
                         </div>
                         <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
                             <button
+                                onClick={() => dispatch(openModal())}
                                 className="btn-orange-big"
                             >
-                                Find Trainer
+                                Register As Content Creator
                             </button>
                         </div>
                     </div>

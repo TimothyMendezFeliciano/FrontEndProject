@@ -393,7 +393,7 @@ export const subscriptionNFTABI = [
         ],
         "name": "registerContentCreator",
         "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "function"
     },
     {

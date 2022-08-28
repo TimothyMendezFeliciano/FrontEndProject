@@ -64,7 +64,6 @@ const Creators: NextPage = () => {
             fetchIfIShouldRun()
 
             const onSubscriptionComplete = async (subscriber: string, nftId: BigNumber, contentCreator: string) => {
-
                 setShowCreatorContent(subscriber === account)
                 setLoading(false)
             }
