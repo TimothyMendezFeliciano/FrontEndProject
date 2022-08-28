@@ -137,6 +137,19 @@ export const subscriptionNFTABI = [
         "type": "event"
     },
     {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "contentCreator",
+                "type": "address"
+            }
+        ],
+        "name": "WithdrawSuccessful",
+        "type": "event"
+    },
+    {
         "inputs": [
             {
                 "internalType": "address",
@@ -203,6 +216,19 @@ export const subscriptionNFTABI = [
         "name": "changeSubscription",
         "outputs": [],
         "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "checkBalanceForContentCreator",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {

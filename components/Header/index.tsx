@@ -7,6 +7,7 @@ import {subscriptionNFTAddress} from "../../contracts/SubscriptionNFTAddress";
 import {subscriptionNFTABI} from "../../contracts/SubscriptionNFTABI";
 import {useEffect, useMemo, useState} from "react";
 import Account from "../Account";
+import WithdrawButton from "../WithdrawButton";
 
 export default function Header() {
     const {account, library} = useWeb3React()
@@ -56,6 +57,7 @@ export default function Header() {
                     </div>
                     <div className="ml-10 space-x-4">
                         <Account triedToEagerConnect={triedToEagerConnect}/>
+                        {isContentCreator && <WithdrawButton triedToEagerConnect={triedToEagerConnect}/>}
                     </div>
                 </div>
                 <div className="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">

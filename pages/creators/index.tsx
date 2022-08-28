@@ -46,7 +46,7 @@ const Creators: NextPage = () => {
     const subscribeToTrainerAction = async (item: ListWithIconInterface) => {
         try {
             const result = await subscriptionNFTContract?.functions.mintSubscriptionNFT(item.id, {
-                value: ethers.utils.parseEther('0.2')
+                value: ethers.utils.parseEther('3')
             })
             setLoading(true)
             return result
