@@ -3,7 +3,7 @@ import Wrapper from "../../components/Wrapper";
 import {useMutation, useQuery} from "@apollo/client";
 import {GET_EXCERCISES} from "../../graphql/queries/excerciseQueries";
 import {ADD_EXCERCISE, DELETE_EXCERCISE} from "../../graphql/mutations/excerciseMutations";
-import {XIcon} from '@heroicons/react/solid'
+import {PlusCircleIcon, XIcon} from '@heroicons/react/solid'
 import ListsWithIcon from "../../components/Lists/WithIcon";
 import FormCardWithLabel from "../../components/Forms/CardWithLabel";
 import Input from "../../components/Inputs/Input";
@@ -16,28 +16,32 @@ const Excercises: NextPage = () => {
     const {loading, error, data} = useQuery(GET_EXCERCISES)
     const [deleteExcercise] = useMutation(DELETE_EXCERCISE, {
         variables: {id: ''},
-        update(cache, {data: {deleteExcercise}}) {
+        refetchQueries: [{query: GET_EXCERCISES}]
+        // update(cache, {data: {deleteExcercise}}) {
+        //     const {excercises} = cache.readQuery({
+        //         query: GET_EXCERCISES
+        //     });
+        //
+        //     cache.writeQuery({
+        //         query: GET_EXCERCISES,
+        //         data: {excercises: excercises.filter(excercise => excercise.id !== deleteExcercise.id)}
+        //     });
+        // }
+    })
+
+    const [addExcercise] = useMutation(ADD_EXCERCISE, {
+        variables: {name: ''},
+        // refetchQueries: [{query: GET_EXCERCISES}]
+        update(cache, {data: {addExcercise}}) {
             const {excercises} = cache.readQuery({
                 query: GET_EXCERCISES
             });
-
             cache.writeQuery({
                 query: GET_EXCERCISES,
-                data: {excercises: excercises.filter(excercise => excercise.id !== deleteExcercise.id)}
-            });
+                data: {excercises: [...excercises, addExcercise]}
+            })
         }
     })
-
-    // const [addExcercise] = useMutation(ADD_EXCERCISE, {
-    //     variables: {name: ''},
-    //     update(cache, {data: {addExcercise}}) {
-    //         const {excercises} = cache.readQuery({query: GET_EXCERCISES})
-    //         cache.writeQuery({
-    //             query: GET_EXCERCISES,
-    //             data: {excercises: [...excercises, addExcercise]}
-    //         })
-    //     }
-    // })
 
     const [excerciseToAdd, setExcerciseToAdd] = useState<string>('')
 
@@ -56,17 +60,17 @@ const Excercises: NextPage = () => {
         return []
     }, [data])
 
-    // const addExcerciseAction = (name: string) => {
-    //     addExcercise({
-    //         variables: {name}
-    //     })
-    // }
+    const addExcerciseAction = (name: string) => {
+        addExcercise({
+            variables: {name}
+        })
+    }
 
-   const deleteExcerciseAction = (id: string) => {
-       deleteExcercise({
-           variables: {id}
-       })
-   }
+    const deleteExcerciseAction = (id: string) => {
+        deleteExcercise({
+            variables: {id}
+        })
+    }
 
 
     return (
@@ -86,8 +90,15 @@ const Excercises: NextPage = () => {
                            label={'Add Excercise'}
                     />
                 ]}
+                action={{
+                    label: '', shouldValidate: false, callback: () => {
+                        addExcerciseAction(excerciseToAdd)
+                    }
+                }}
             />
-            <ListsWithIcon label={'All Excercises'} listToDisplay={dataToDisplay} callback={deleteExcerciseAction}/>
+
+            <ListsWithIcon label={'All Excercises'} listToDisplay={dataToDisplay}
+                           callback={(item) => deleteExcerciseAction(item.id)}/>
         </Wrapper>
     )
 }

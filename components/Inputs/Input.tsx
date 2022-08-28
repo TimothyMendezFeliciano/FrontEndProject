@@ -61,9 +61,11 @@ export default function Input({
     }
 
     return (
-        <label htmlFor={id}>
-            <strong>{label}</strong>
-            <input {...props[type]}/>
-        </label>
+        <>
+            <label htmlFor={id}>
+                <strong>{label}</strong>
+                <input {...props[type]}/>
+            </label>
+        </>
     )
 }

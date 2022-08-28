@@ -1,13 +1,42 @@
 import Image from "next/image";
-import navigation from "./navigation";
+import {navigation, creatorNavigation, userNavigation} from "./navigation";
 import {useWeb3React} from "@web3-react/core";
 import useEagerConnect from "../../hooks/useEagerConnect";
-import {shortenHex} from "../../utils/utils";
+import useContract from "../../hooks/useContract";
+import {subscriptionNFTAddress} from "../../contracts/SubscriptionNFTAddress";
+import {subscriptionNFTABI} from "../../contracts/SubscriptionNFTABI";
+import {useEffect, useMemo, useState} from "react";
 import Account from "../Account";
+import WithdrawButton from "../WithdrawButton";
+import {useRouter} from "next/router";
 
 export default function Header() {
-   const { account, library } = useWeb3React()
+    const router = useRouter()
+    const {account, library} = useWeb3React()
     const triedToEagerConnect = useEagerConnect()
+    const subscriptionNFTContract = useContract(subscriptionNFTAddress, subscriptionNFTABI);
+    const [hasValidSubscription, setHasValidSubscription] = useState()
+    const [isContentCreator, setIsContentCreator] = useState()
+    const [navigationTabsLoading, setNavigationTabsLoading] = useState(true)
+    const navigationTabs = useMemo(() => {
+        if (isContentCreator) return creatorNavigation
+        return userNavigation
+    }, [hasValidSubscription, isContentCreator, account])
+
+    useEffect(() => {
+        setNavigationTabsLoading(true)
+        const checkIfValid = async () => {
+            const result1 = await subscriptionNFTContract?.functions.checkIfSubscriptionValid()
+            const result2 = await subscriptionNFTContract?.functions.checkIfContentCreator(account);
+            setHasValidSubscription(result1[0])
+            setIsContentCreator(result2[0])
+        }
+        if (subscriptionNFTContract && account) {
+            checkIfValid()
+        }
+        setNavigationTabsLoading(false)
+    }, [subscriptionNFTContract, account, router])
+
 
     const isConnected = typeof account === "string" && !!library
     return (
@@ -20,22 +49,23 @@ export default function Header() {
                             <Image src={'/neuromancerIcon.jpg'} className={'rounded'} height={32} width={32}/>
                         </a>
                         <div className="hidden ml-10 space-x-8 lg:block">
-                            {navigation.map((link) => (
-                                <a key={link.name} href={link.href} className="text-base font-medium text-white hover:text-indigo-50">
+                            {!navigationTabsLoading && navigationTabs.map((link) => (
+                                <a key={link.name} href={link.href}
+                                   className="text-base font-medium text-white hover:text-indigo-50">
                                     {link.name}
                                 </a>
                             ))}
                         </div>
                     </div>
                     <div className="ml-10 space-x-4">
-                        {/*<Account triedToEagerConnect={triedToEagerConnect}/>*/}
-                        {/*@ts-ignore*/}
-                        <neftify-connect-wallet></neftify-connect-wallet>
+                        <Account triedToEagerConnect={triedToEagerConnect}/>
+                        {isContentCreator && <WithdrawButton triedToEagerConnect={triedToEagerConnect}/>}
                     </div>
                 </div>
                 <div className="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">
-                    {navigation.map((link) => (
-                        <a key={link.name} href={link.href} className="text-base font-medium text-white hover:text-indigo-50">
+                    {!navigationTabsLoading && navigationTabs.map((link) => (
+                        <a key={link.name} href={link.href}
+                           className="text-base font-medium text-white hover:text-indigo-50">
                             {link.name}
                         </a>
                     ))}

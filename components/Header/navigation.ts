@@ -1,10 +1,30 @@
-const navigation = [
+export const navigation = [
+    {
+        name: 'Home', href: '/'
+    }
+]
+
+export const userNavigation = [
     {
         name: 'Home', href: '/'
     },
     {
-        name: 'Excercises', href: '/excercises'
+        name: 'ContentCreators', href: '/creators'
     }
 ]
 
-export default navigation
+export const creatorNavigation = [
+    {
+        name: 'Home', href: '/'
+    },
+    {
+        name: 'Subscribers', href: '/subscribers'
+    },
+    {
+        name: 'Create', href: '/create'
+    },
+    {
+        name: 'Excercises', href: '/excercises'
+    }
+
+]
