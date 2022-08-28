@@ -5,12 +5,18 @@ import store from "../components/ReduxStore/store";
 import getLibrary from "../getLibrary";
 import {Web3ReactProvider} from '@web3-react/core'
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
+import ContentCreatorFormModals from "../components/Modals/ContentCreatorFormModals";
 
 const cache = new InMemoryCache({
     typePolicies: {
         Query: {
             fields: {
                 excercises: {
+                    merge(existing, incoming) {
+                        return incoming
+                    }
+                },
+                trainers: {
                     merge(existing, incoming) {
                         return incoming
                     }
@@ -29,7 +35,10 @@ function MyApp({Component, pageProps}: AppProps) {
     return (
         <ApolloProvider client={graphqlClient}>
             <Web3ReactProvider getLibrary={getLibrary}>
-                <Provider store={store}><Component {...pageProps} /></Provider>
+                <Provider store={store}>
+                    <ContentCreatorFormModals/>
+                    <Component {...pageProps} />
+                </Provider>
             </Web3ReactProvider>
         </ApolloProvider>
     )

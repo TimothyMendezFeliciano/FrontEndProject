@@ -6,7 +6,7 @@ interface PropTypes {
     title: string
     subtitle: string
     formInputs: any[]
-    action: CallToAction
+    action?: CallToAction
 }
 
 
@@ -28,11 +28,11 @@ export default function FormCardWithLabel({title, subtitle, formInputs, action}:
                                     {formInput}
                                 </div>
                             ))}
-                            <div>
-                                <button onClick={action.callback} className={'btn-plus-icon'}>
+                            {action && <div>
+                                <button onClick={action?.callback} className={'btn-plus-icon'}>
                                     <PlusCircleIcon className={'h-6 w-6'}/>
                                 </button>
-                            </div>
+                            </div>}
                         </div>
                     </div>
                 </div>

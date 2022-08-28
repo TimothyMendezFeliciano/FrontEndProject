@@ -7,9 +7,10 @@ import {useWeb3React} from "@web3-react/core";
 
 type PropTypes = {
     triedToEagerConnect: boolean
+    isContentCreator: boolean
 }
 
-export default function WithdrawButton({triedToEagerConnect}: PropTypes) {
+export default function WithdrawButton({triedToEagerConnect, isContentCreator}: PropTypes) {
 
     const {account} = useWeb3React()
     const subscriptionNFTContract = useContract(subscriptionNFTAddress, subscriptionNFTABI);
@@ -17,10 +18,15 @@ export default function WithdrawButton({triedToEagerConnect}: PropTypes) {
 
     useEffect(() => {
         const getBalance = async () => {
-            const [resultAsBigNumber] = await subscriptionNFTContract?.functions.checkBalanceForContentCreator()
-            setBalanceAvailable(ethers.utils.formatEther(resultAsBigNumber))
+
+            try {
+                const [resultAsBigNumber] = await subscriptionNFTContract?.functions.checkBalanceForContentCreator()
+                setBalanceAvailable(ethers.utils.formatEther(resultAsBigNumber))
+            } catch (error) {
+                console.error(error)
+            }
         }
-        if (subscriptionNFTContract && account) {
+        if (subscriptionNFTContract && account && isContentCreator) {
             getBalance()
 
             const onWithdrawComplete = async (contentCreator: string) => {
@@ -35,7 +41,7 @@ export default function WithdrawButton({triedToEagerConnect}: PropTypes) {
                 subscriptionNFTContract.off('WithdrawSuccessful', onWithdrawComplete)
             }
         }
-    }, [subscriptionNFTContract, account])
+    }, [subscriptionNFTContract, account, isContentCreator])
 
     const withdrawBalance = async () => {
         try {
@@ -49,6 +55,10 @@ export default function WithdrawButton({triedToEagerConnect}: PropTypes) {
 
     if (!triedToEagerConnect) {
         return null;
+    }
+
+    if (!isContentCreator) {
+        return <div></div>
     }
 
     return (
