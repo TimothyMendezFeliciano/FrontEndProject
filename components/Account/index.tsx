@@ -37,7 +37,6 @@ const Account = ({triedToEagerConnect}: AccountProps) => {
     }
 
     if (!triedToEagerConnect) {
-        console.log('Not Tried to Easger Connect')
         return null;
     }
 
