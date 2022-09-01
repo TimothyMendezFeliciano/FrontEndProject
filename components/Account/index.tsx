@@ -29,10 +29,15 @@ const Account = ({triedToEagerConnect}: AccountProps) => {
     }, [active, error, stopOnboarding]);
 
     if (error) {
-        return null;
+        return (
+            <div className={'btn-primary'}>
+                Unsopported Network
+            </div>
+        );
     }
 
     if (!triedToEagerConnect) {
+        console.log('Not Tried to Easger Connect')
         return null;
     }
 
