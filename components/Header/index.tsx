@@ -9,6 +9,7 @@ import {useEffect, useMemo, useState} from "react";
 import Account from "../Account";
 import WithdrawButton from "../WithdrawButton";
 import {useRouter} from "next/router";
+import {classNames} from "../../utils/utils";
 
 export default function Header() {
     const router = useRouter()
@@ -42,7 +43,7 @@ export default function Header() {
     return (
         <header className="bg-gray-700">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
-                <div className="w-full py-6 flex items-center justify-between border-b border-red-500 lg:border-none">
+                <div className="w-full py-2 flex items-center justify-between border-b border-red-500 lg:border-none">
                     <div className="flex items-center">
                         <a href="#">
                             <span className="sr-only">Front End Project</span>
@@ -51,7 +52,10 @@ export default function Header() {
                         <div className="hidden ml-10 space-x-8 lg:block">
                             {!navigationTabsLoading && navigationTabs.map((link) => (
                                 <a key={link.name} href={link.href}
-                                   className="text-base font-medium text-white hover:text-indigo-50">
+                                   className={classNames(
+                                       "text-base font-medium text-white hover:text-indigo-50",
+                                       `${router.pathname === link.href ? 'text-red-500':''}`
+                                   )}>
                                     {link.name}
                                 </a>
                             ))}
@@ -65,7 +69,10 @@ export default function Header() {
                 <div className="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">
                     {!navigationTabsLoading && navigationTabs.map((link) => (
                         <a key={link.name} href={link.href}
-                           className="text-base font-medium text-white hover:text-indigo-50">
+                           className={classNames(
+                               "text-base font-medium text-white hover:text-indigo-50",
+                               `${router.pathname === link.href ? 'text-red-500':''}`
+                           )}>
                             {link.name}
                         </a>
                     ))}
