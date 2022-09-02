@@ -38,3 +38,7 @@ export const parseBalance = (
     decimals = 18,
     decimalsToDisplay = 3
 ) => parseFloat(formatUnits(value, decimals)).toFixed(decimalsToDisplay);
+
+export const classNames = (...classes: Array<string>): string => {
+    return classes.filter(Boolean).join(' ')
+}

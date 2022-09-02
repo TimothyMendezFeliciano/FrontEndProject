@@ -2,26 +2,31 @@ import Image from "next/image";
 import navigation from "./navigation";
 import {useWeb3React} from "@web3-react/core";
 import useEagerConnect from "../../hooks/useEagerConnect";
-import {shortenHex} from "../../utils/utils";
 import Account from "../Account";
+import {useRouter} from "next/router";
+import {classNames} from "../../utils/utils";
 
 export default function Header() {
-   const { account, library } = useWeb3React()
+    const {account, library} = useWeb3React()
     const triedToEagerConnect = useEagerConnect()
+    const router = useRouter()
 
     const isConnected = typeof account === "string" && !!library
     return (
         <header className="bg-indigo-600">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
-                <div className="w-full py-6 flex items-center justify-between border-b border-indigo-500 lg:border-none">
+                <div className="w-full py-2 flex items-center justify-between border-b border-indigo-500 lg:border-none">
                     <div className="flex items-center">
                         <a href="#">
                             <span className="sr-only">Front End Project</span>
-                            <Image src={'/neuromancerIcon.jpg'} className={'rounded'} height={32} width={32}/>
+                            <Image src={'/neuromancerIcon.jpg'} className={'rounded'} height={48} width={48}/>
                         </a>
                         <div className="hidden ml-10 space-x-8 lg:block">
-                            {navigation.map((link) => (
-                                <a key={link.name} href={link.href} className="text-base font-medium text-white hover:text-indigo-50">
+                            {navigation.map((link) => ( <a key={link.name} href={link.href}
+                                          className={classNames(
+                                              "text-base font-medium text-white hover:text-indigo-50",
+                                              `${router.pathname === link.href ? 'border-b-2 border-b-amber-200' : ''}`
+                                          )}>
                                     {link.name}
                                 </a>
                             ))}
@@ -33,7 +38,11 @@ export default function Header() {
                 </div>
                 <div className="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">
                     {navigation.map((link) => (
-                        <a key={link.name} href={link.href} className="text-base font-medium text-white hover:text-indigo-50">
+                        <a key={link.name} href={link.href}
+                           className={classNames(
+                               "text-base font-medium text-white hover:text-indigo-50",
+                               `${router.pathname === link.href ? 'border-b-2 border-b-amber-200' : ''}`
+                           )}>
                             {link.name}
                         </a>
                     ))}
