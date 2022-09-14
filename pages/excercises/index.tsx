@@ -31,8 +31,8 @@ const Excercises: NextPage = () => {
 
     const [addExcercise] = useMutation(ADD_EXCERCISE, {
         variables: {name: ''},
-        // refetchQueries: [{query: GET_EXCERCISES}]
         update(cache, {data: {addExcercise}}) {
+            // @ts-ignore
             const {excercises} = cache.readQuery({
                 query: GET_EXCERCISES
             });
@@ -98,7 +98,7 @@ const Excercises: NextPage = () => {
             />
 
             <ListsWithIcon label={'All Excercises'} listToDisplay={dataToDisplay}
-                           callback={(item) => deleteExcerciseAction(item.id)}/>
+                           callback={(item: { id: string; }) => deleteExcerciseAction(item.id)}/>
         </Wrapper>
     )
 }
