@@ -387,20 +387,20 @@ export default function Calendar() {
                                 type="button"
                                 className={classNames(
                                     day.isCurrentMonth ? 'bg-white' : 'bg-gray-50',
-                                    (day.isSelected || day.isToday) && 'font-semibold',
-                                    day.isSelected && 'text-white',
-                                    !day.isSelected && day.isToday && 'text-indigo-600',
-                                    !day.isSelected && day.isCurrentMonth && !day.isToday && 'text-gray-900',
-                                    !day.isSelected && !day.isCurrentMonth && !day.isToday && 'text-gray-500',
+                                    (day.isSelected || day.isToday) ? 'font-semibold' : '',
+                                    day.isSelected ? 'text-white' : '',
+                                    (!day.isSelected && day.isToday) ? 'text-indigo-600' : '',
+                                    (!day.isSelected && day.isCurrentMonth && !day.isToday) ? 'text-gray-900' : '',
+                                    (!day.isSelected && !day.isCurrentMonth && !day.isToday) ? 'text-gray-500' : '',
                                     'flex h-14 flex-col py-2 px-3 hover:bg-gray-100 focus:z-10'
                                 )}
                             >
                                 <time
                                     dateTime={day.date}
                                     className={classNames(
-                                        day.isSelected && 'flex h-6 w-6 items-center justify-center rounded-full',
-                                        day.isSelected && day.isToday && 'bg-indigo-600',
-                                        day.isSelected && !day.isToday && 'bg-gray-900',
+                                        day.isSelected ? 'flex h-6 w-6 items-center justify-center rounded-full' : '',
+                                        (day.isSelected && day.isToday) ? 'bg-indigo-600' : '',
+                                        (day.isSelected && !day.isToday) ? 'bg-gray-900' : '',
                                         'ml-auto'
                                     )}
                                 >
@@ -419,7 +419,7 @@ export default function Calendar() {
                     </div>
                 </div>
             </div>
-            {selectedDay?.events?.length > 0 && (
+            {selectedDay && selectedDay?.events?.length > 0 && (
                 <div className="py-10 px-4 sm:px-6 lg:hidden">
                     <ol className="divide-y divide-gray-100 overflow-hidden rounded-lg bg-white text-sm shadow ring-1 ring-black ring-opacity-5">
                         {selectedDay?.events.map((event) => (

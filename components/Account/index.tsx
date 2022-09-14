@@ -4,12 +4,14 @@ import {useEffect, useState} from "react";
 import {injected} from "../../connectors";
 import {UserRejectedRequestError} from "@web3-react/injected-connector";
 import {shortenHex} from "../../utils/utils";
+import {useAppSelector} from "../../hooks/useRedux";
 
 type AccountProps = {
     triedToEagerConnect: boolean
 }
 
 const Account = ({triedToEagerConnect}: AccountProps) => {
+    const {isOpen} = useAppSelector(state => state.modal)
     const {active, error, activate, chainId, account, setError, deactivate} =
         useWeb3React();
 

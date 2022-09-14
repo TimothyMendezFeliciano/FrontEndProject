@@ -32,6 +32,7 @@ export default function ContentCreatorFormModals() {
     const [addTrainer] = useMutation(ADD_TRAINER, {
         variables: {name: '', specialty: '', publicAddress: ''},
         update(cache, {data: {addTrainer}}) {
+            // @ts-ignore
             const {trainers} = cache.readQuery({
                 query: GET_TRAINERS
             });

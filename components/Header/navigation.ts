@@ -21,7 +21,7 @@ export const creatorNavigation = [
         name: 'Subscribers', href: '/subscribers'
     },
     {
-        name: 'Create', href: '/create'
+        name: 'Routine', href: '/routine'
     },
     {
         name: 'Excercises', href: '/excercises'
