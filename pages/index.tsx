@@ -11,6 +11,7 @@ const Home: NextPage = () => {
     useEffect(() => {
         if (window) {
             const camera = new PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000)
+            camera.position.set(0, 0, 5)
             setCamera(camera)
         }
     }, [])
@@ -23,7 +24,7 @@ const Home: NextPage = () => {
                 renderer.setSize(innerWidth, innerHeight)
                 return renderer
             }}>
-                <ambientLight />
+                <ambientLight/>
                 <pointLight position={[10, 10, 10]}/>
                 <Box position={[-2, 0, 0]}/>
             </Canvas>
