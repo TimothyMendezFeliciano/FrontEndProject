@@ -25,7 +25,7 @@ export default function Wrapper({children, title, description}: PropTypes) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Header />
-            <div className={'py-10 max-w-7xl mx-auto px-2 sm:px-4 lg:px-8'}>
+            <div className={'h-screen py-10 max-w-7xl mx-auto sm:px-4 lg:px-8'}>
                 {children}
             </div>
         </div>
