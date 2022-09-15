@@ -20,12 +20,14 @@ const Home: NextPage = () => {
         <Wrapper title={'Timothy\'s Boilerplate'}
                  description={'A FrontEnd for every single project I want to practice'}>
             {/*<SolarSystem/>*/}
-            <Canvas camera={camera} gl={canvas => {
-                const renderer = new WebGLRenderer({canvas})
-                renderer.setSize(innerWidth, innerHeight)
-                return renderer
-            }}>
-                <ambientLight/>
+            <Canvas camera={camera}
+                    gl={canvas => {
+                        const renderer = new WebGLRenderer({canvas})
+                        renderer.setSize(innerWidth, innerHeight)
+                        return renderer
+                    }}
+            >
+                <directionalLight position={[0, 0, 1]} color={'white'}/>
                 <pointLight position={[10, 10, 10]}/>
                 <Box position={[-2, 0, 0]}/>
                 <Plane position={[2, 0, 0]}/>
