@@ -4,6 +4,7 @@ import {Canvas} from "@react-three/fiber";
 import Box from "../components/Box";
 import {PerspectiveCamera, WebGLRenderer} from 'three'
 import {useEffect, useState} from "react";
+import Plane from "../components/Plane";
 
 const Home: NextPage = () => {
     const [camera, setCamera] = useState<PerspectiveCamera>()
@@ -27,6 +28,7 @@ const Home: NextPage = () => {
                 <ambientLight/>
                 <pointLight position={[10, 10, 10]}/>
                 <Box position={[-2, 0, 0]}/>
+                <Plane position={[2, 0, 0]}/>
             </Canvas>
         </Wrapper>
     )
