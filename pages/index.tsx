@@ -5,9 +5,19 @@ import Box from "../components/Box";
 import {PerspectiveCamera, WebGLRenderer} from 'three'
 import {useEffect, useState} from "react";
 import Plane from "../components/Plane";
+import DatGui, {DatNumber, DatString} from "react-dat-gui";
 
 const Home: NextPage = () => {
     const [camera, setCamera] = useState<PerspectiveCamera>()
+    const [data, setData] = useState({
+        width: 10,
+    })
+
+    const handleUpdate = (newData) => {
+        setData(prevState => {
+            return {...prevState, ...newData}
+        })
+    }
 
     useEffect(() => {
         if (window) {
@@ -20,6 +30,9 @@ const Home: NextPage = () => {
         <Wrapper title={'Timothy\'s Boilerplate'}
                  description={'A FrontEnd for every single project I want to practice'}>
             {/*<SolarSystem/>*/}
+            <DatGui className={'block m-4 '} data={data} onUpdate={handleUpdate}>
+                <DatNumber min={1} max={10} step={0.1} path={'width'} label={'Width: '}/>
+            </DatGui>
             <Canvas camera={camera}
                     gl={canvas => {
                         const renderer = new WebGLRenderer({canvas})
@@ -29,8 +42,8 @@ const Home: NextPage = () => {
             >
                 <directionalLight position={[0, 0, 1]} color={'white'}/>
                 <pointLight position={[10, 10, 10]}/>
-                <Box position={[-2, 0, 0]}/>
-                <Plane position={[2, 0, 0]}/>
+                {/*<Box position={[-2, 0, 0]}/>*/}
+                <Plane position={[0, 0, 0]} />
             </Canvas>
         </Wrapper>
     )

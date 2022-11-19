@@ -34,7 +34,7 @@ export default function Plane(props: ThreeElements['mesh']) {
         <mesh
             {...props}
             ref={mesh}
-            scale={active ? 1 : 0.5}
+            scale={active ? 2 : 1}
             onClick={() => setActive(!active)}
             onPointerOver={() => setHover(true)}
             onPointerOut={() => setHover(false)}
