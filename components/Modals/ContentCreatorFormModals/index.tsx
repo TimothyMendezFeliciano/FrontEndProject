@@ -10,10 +10,8 @@ import useContract from "../../../hooks/useContract";
 import {subscriptionNFTAddress} from "../../../contracts/SubscriptionNFTAddress";
 import {subscriptionNFTABI} from "../../../contracts/SubscriptionNFTABI";
 import {useRouter} from "next/router";
-import {useMutation, useQuery} from "@apollo/client";
-import {ADD_TRAINER} from "../../../graphql/mutations/trainerMutations";
-import {GET_TRAINERS} from "../../../graphql/queries/trainerQueries";
 import {ethers} from "ethers";
+import {addTrainer} from "../../../services/TrainerService";
 
 export default function ContentCreatorFormModals() {
 
@@ -27,21 +25,6 @@ export default function ContentCreatorFormModals() {
     const [specialty, setSpecialty] = useState<string>('')
     const [publicAddress, setPublicAddress] = useState<string>('')
     const [isContentCreator, setIsContentCreator] = useState<boolean>(false)
-
-    const {loading, error, data} = useQuery(GET_TRAINERS)
-    const [addTrainer] = useMutation(ADD_TRAINER, {
-        variables: {name: '', specialty: '', publicAddress: ''},
-        update(cache, {data: {addTrainer}}) {
-            // @ts-ignore
-            const {trainers} = cache.readQuery({
-                query: GET_TRAINERS
-            });
-            cache.writeQuery({
-                query: GET_TRAINERS,
-                data: {trainers: [...trainers, addTrainer]}
-            })
-        }
-    })
 
     const registerAsTrainerAction = useCallback(async () => {
         try {
@@ -72,9 +55,7 @@ export default function ContentCreatorFormModals() {
 
             const onCreatorRegistered = async (contentCreator: string) => {
                 if (account === contentCreator) {
-                    addTrainer(({
-                        variables: {name, specialty, publicAddress}
-                    }))
+                    await addTrainer(name, specialty, publicAddress)
                     checkIfValid()
                 }
             }
