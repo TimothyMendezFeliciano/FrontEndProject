@@ -5,6 +5,17 @@ export const getAllExcercises = async () => {
     return data
 }
 
+export const getIndividualExcercise = async (id?: string, name?: string) => {
+    const {data} = await authAxios.get('/excercise/individual',
+        {
+            params: {
+                id, name
+            }
+        })
+
+    return data
+}
+
 export const addExcercise = async (name: string) => {
     const {data} = await authAxios.post('/excercise/addExcercise', {
         name
