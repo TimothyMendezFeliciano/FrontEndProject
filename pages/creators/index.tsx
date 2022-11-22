@@ -1,12 +1,10 @@
 import {NextPage} from "next";
 import Wrapper from "../../components/Wrapper";
-import {useQuery} from "@apollo/client";
-import {GET_TRAINERS} from "../../graphql/queries/trainerQueries";
 import ListsWithIcon from "../../components/Lists/WithIcon";
 import {ListWithIconInterface} from "../../models/ListWithIconInterface";
 import {useEffect, useMemo, useState} from "react";
 import {UserAddIcon} from "@heroicons/react/solid";
-import {TrainersModel} from "../../models/GraphQL/TrainersModel";
+import {TrainersModel} from "../../models/TrainersModel";
 import useContract from "../../hooks/useContract";
 import {subscriptionNFTAddress} from "../../contracts/SubscriptionNFTAddress";
 import {subscriptionNFTABI} from "../../contracts/SubscriptionNFTABI";
@@ -14,12 +12,13 @@ import {BigNumber, ethers} from "ethers";
 import {Blocks} from "react-loader-spinner";
 import {useWeb3React} from "@web3-react/core";
 import Calendar from "../../components/Calendar";
+import {getAllTrainers} from "../../services/TrainerService";
 
 
 const Creators: NextPage = () => {
 
     const {account} = useWeb3React()
-    const {data} = useQuery(GET_TRAINERS)
+    const [data, setData] = useState<TrainersModel[]>([])
     const subscriptionNFTContract = useContract(subscriptionNFTAddress, subscriptionNFTABI);
     const [loading, setLoading] = useState(false)
     const [shouldRun, setShouldRun] = useState<boolean>(false)
@@ -28,7 +27,7 @@ const Creators: NextPage = () => {
     const dataToDisplay: ListWithIconInterface[] = useMemo(() => {
         const result: ListWithIconInterface[] = [];
         if (data) {
-            data.trainers.forEach(({publicAddress, name, specialty}: TrainersModel) => {
+            data.forEach(({publicAddress, name, specialty}: TrainersModel) => {
                 result.push({
                     id: publicAddress,
                     title: name,
@@ -75,6 +74,15 @@ const Creators: NextPage = () => {
             }
         }
     }, [subscriptionNFTContract])
+
+    useEffect(()=>{
+        const fetchAllTrainers = async () => {
+            const result = await getAllTrainers()
+            setData(result)
+        }
+
+        fetchAllTrainers()
+    },[])
     return (
         <Wrapper title={'Timothy\'s Boilerplate'}
                  description={'A FrontEnd for every single project I want to practice'}>

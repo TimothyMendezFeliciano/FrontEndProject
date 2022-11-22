@@ -6,12 +6,12 @@ import FormCardWithLabel from "../../components/Forms/CardWithLabel";
 import Input from "../../components/Inputs/Input";
 import {useEffect, useMemo, useState} from "react";
 import {ListWithIconInterface} from "../../models/ListWithIconInterface";
-import {ExcercisesModel} from "../../models/GraphQL/ExcercisesModel";
+import {ExcercisesModel} from "../../models/ExcercisesModel";
 import {addExcercise, deleteExcercise, getAllExcercises} from "../../services/ExcerciseService";
 
 const Excercises: NextPage = () => {
 
-    const [data, setData] = useState<any[]>([])
+    const [data, setData] = useState<ExcercisesModel[]>([])
 
     const [excerciseToAdd, setExcerciseToAdd] = useState<string>('')
 
@@ -19,7 +19,7 @@ const Excercises: NextPage = () => {
         const result: ListWithIconInterface[] = [];
         if (data) {
             // @ts-ignore
-            data?.excercises.forEach(({id, name}: ExcercisesModel) => {
+            data.forEach(({id, name}: ExcercisesModel) => {
                 result.push({
                     id,
                     title: name,
