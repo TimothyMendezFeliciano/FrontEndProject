@@ -5,7 +5,7 @@ export const getAllTrainees = async () => {
     return data
 }
 
-export const getIndividualTrainee = async (id: string, name?: string, interest?: string, publicAddress?: string) => {
+export const getIndividualTrainee = async (id?: string, name?: string, interest?: string, publicAddress?: string) => {
     try {
         const {data} = await authAxios.get('/trainee/individual', {
             params: {
@@ -26,9 +26,14 @@ export const getIndividualTrainee = async (id: string, name?: string, interest?:
 export const addTrainee = async (name: string, interest: string, publicAddress: string) => {
     try {
         const {data} = await authAxios.post('/trainee/addTrainee', {
-            name, interest, publicAddress
-        })
-        return data
+           name, interest, publicAddress
+        },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        return !!data.id
     } catch (error) {
         console.log(error)
     }

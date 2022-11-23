@@ -1,6 +1,7 @@
 import CarouselImage from "../Carousel/Image";
 import {useAppDispatch} from "../../hooks/useRedux";
 import {openModal} from "../Modals/ModalSlice";
+import {openUserModal} from "../Modals/userModalSlice";
 
 export default function Landing() {
     const dispatch = useAppDispatch()
@@ -21,6 +22,7 @@ export default function Landing() {
                     <div className="mt-10 sm:flex sm:justify-center lg:justify-start">
                         <div className="rounded-md shadow">
                             <button
+                                onClick={() => dispatch(openUserModal())}
                                 className="btn-primary-big"
                             >
                                 Sign up

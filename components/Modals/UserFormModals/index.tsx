@@ -1,77 +1,51 @@
+import {useRouter} from "next/router";
+import {useWeb3React} from "@web3-react/core";
 import {useAppDispatch, useAppSelector} from "../../../hooks/useRedux";
-import {Fragment, useCallback, useEffect, useRef, useState} from 'react'
-import {Dialog, Transition} from '@headlessui/react'
-import {closeModal} from "../ModalSlice";
+import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {Dialog, Transition} from "@headlessui/react";
 import {CheckIcon} from "@heroicons/react/solid";
 import FormCardWithLabel from "../../Forms/CardWithLabel";
 import Input from "../../Inputs/Input";
-import {useWeb3React} from "@web3-react/core";
-import useContract from "../../../hooks/useContract";
-import {subscriptionNFTAddress} from "../../../contracts/SubscriptionNFTAddress";
-import {subscriptionNFTABI} from "../../../contracts/SubscriptionNFTABI";
-import {useRouter} from "next/router";
-import {ethers} from "ethers";
-import {addTrainer} from "../../../services/TrainerService";
+import {closeUserModal} from "../userModalSlice";
+import {addTrainee, getIndividualTrainee} from "../../../services/TraineeService";
 
-export default function ContentCreatorFormModals() {
+export default function UserFormModals() {
 
     const router = useRouter()
-    const subscriptionNFTContract = useContract(subscriptionNFTAddress, subscriptionNFTABI);
     const {account} = useWeb3React()
     const dispatch = useAppDispatch()
-    const {isOpen} = useAppSelector(state => state.modal)
-    const cancelButtonRef  = useRef(null)
+    const {isOpen} = useAppSelector(state => state.userModal)
+    const cancelButtonRef = useRef(null)
     const [name, setName] = useState<string>('')
-    const [specialty, setSpecialty] = useState<string>('')
+    const [interest, setInterest] = useState<string>('')
     const [publicAddress, setPublicAddress] = useState<string>('')
-    const [isContentCreator, setIsContentCreator] = useState<boolean>(false)
+    const [isAlreadyRegisteredUser, setIsAlreadyRegisteredUser] = useState<boolean>(false)
 
-    const registerAsTrainerAction = useCallback(async () => {
-        try {
-            const result = await subscriptionNFTContract?.functions.registerContentCreator(publicAddress,
-                {
-                    value: ethers.utils.parseEther('1')
-                })
+    const registerAsTraineeAction = useCallback(async () => {
+        if (!isAlreadyRegisteredUser) {
+            const result = await addTrainee(name, interest, publicAddress)
             return result
-        } catch (error) {
-            console.error(error)
-            return error
         }
-    }, [name, specialty, publicAddress])
+    }, [name, interest, publicAddress])
+
 
     useEffect(() => {
         if (account) setPublicAddress(account)
     }, [account])
 
     useEffect(() => {
-        const checkIfValid = async () => {
-            const result = await subscriptionNFTContract?.functions.checkIfContentCreator(account)
-            setIsContentCreator(result[0])
-            return result
+        const fetchIsAlreadyRegisteredUser = async () => {
+            const result = await getIndividualTrainee('', name, interest, publicAddress)
+            setIsAlreadyRegisteredUser(result)
         }
 
-        if (subscriptionNFTContract && account) {
-            checkIfValid()
-
-            const onCreatorRegistered = async (contentCreator: string) => {
-                if (account === contentCreator) {
-                    await addTrainer(name, specialty, publicAddress)
-                    checkIfValid()
-                }
-            }
-
-            subscriptionNFTContract?.on('CreatorRegistered', onCreatorRegistered)
-
-            return () => {
-                subscriptionNFTContract?.off('CreatorRegistered', onCreatorRegistered)
-            }
-        }
-    }, [subscriptionNFTContract, account, router, name, specialty, publicAddress])
+        fetchIsAlreadyRegisteredUser()
+    }, [publicAddress, name, interest, registerAsTraineeAction])
 
     return (
         <Transition.Root show={isOpen} as={Fragment}>
             <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef}
-                    onClose={() => dispatch(closeModal())}>
+                    onClose={() => dispatch(closeUserModal())}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -97,7 +71,7 @@ export default function ContentCreatorFormModals() {
                         >
                             <Dialog.Panel
                                 className="relative bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full sm:p-6">
-                                {isContentCreator ?
+                                {isAlreadyRegisteredUser ?
                                     <div>
                                         <div
                                             className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
@@ -106,42 +80,42 @@ export default function ContentCreatorFormModals() {
                                         <div className="mt-3 text-center sm:mt-5">
                                             <Dialog.Title as="h3"
                                                           className="text-lg leading-6 font-medium text-gray-900">
-                                                Already A Content Creator
+                                                Already A Registered User
                                             </Dialog.Title>
                                             <div className="mt-2">
                                                 <p className="text-sm text-gray-500">
-                                                    Feel Free to add excercises or manage your subscriber base.
+                                                    Go to the Content Creators tab and select a trainer!
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                     : <FormCardWithLabel title={'Register'}
-                                                         subtitle={'Complete the form to become a Content Creator'}
+                                                         subtitle={'Complete the form to become a Registered User'}
                                                          formInputs={[
                                                              <Input key={'name'} type={'text'} label={'Name'}
                                                                     id={'name'}
                                                                     value={name}
                                                                     onChange={setName}/>,
-                                                             <Input key={'specialty'} type={'text'} label={'Specialty'}
-                                                                    id={'specialty'} value={specialty}
-                                                                    onChange={setSpecialty}/>,
+                                                             <Input key={'interest'} type={'text'} label={'Interest'}
+                                                                    id={'interest'} value={interest}
+                                                                    onChange={setInterest}/>,
                                                              <Input key={'publicAddress'} type={'text'}
                                                                     label={'PublicAddress'} id={'publicAddress'}
                                                                     disabled={true}
                                                                     value={publicAddress} onChange={setPublicAddress}/>,
                                                          ]} action={undefined}/>}
                                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
-                                    {!isContentCreator && <button
+                                    {!isAlreadyRegisteredUser && <button
                                         type="button"
                                         className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
-                                        onClick={() => registerAsTrainerAction()}
+                                        onClick={() => registerAsTraineeAction()}
                                     >
                                         Submit
                                     </button>}
                                     <button
                                         type="button"
                                         className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
-                                        onClick={() => dispatch(closeModal())}
+                                        onClick={() => dispatch(closeUserModal())}
                                         ref={cancelButtonRef}
                                     >
                                         Cancel
