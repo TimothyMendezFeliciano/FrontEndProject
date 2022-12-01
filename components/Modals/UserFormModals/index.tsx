@@ -8,6 +8,7 @@ import FormCardWithLabel from "../../Forms/CardWithLabel";
 import Input from "../../Inputs/Input";
 import {closeUserModal} from "../userModalSlice";
 import {addTrainee, getIndividualTrainee} from "../../../services/TraineeService";
+import InputFile from "../../Inputs/InputFile";
 
 export default function UserFormModals() {
 
@@ -19,6 +20,8 @@ export default function UserFormModals() {
     const [name, setName] = useState<string>('')
     const [interest, setInterest] = useState<string>('')
     const [publicAddress, setPublicAddress] = useState<string>('')
+    const [file, setFile] = useState<File | undefined>()
+    const [objectURL, setObjectURL] = useState<string>('')
     const [isAlreadyRegisteredUser, setIsAlreadyRegisteredUser] = useState<boolean>(false)
 
     const registerAsTraineeAction = useCallback(async () => {
@@ -28,7 +31,6 @@ export default function UserFormModals() {
         }
     }, [name, interest, publicAddress])
 
-
     useEffect(() => {
         if (account) setPublicAddress(account)
     }, [account])
@@ -36,7 +38,7 @@ export default function UserFormModals() {
     useEffect(() => {
         const fetchIsAlreadyRegisteredUser = async () => {
             const result = await getIndividualTrainee('', name, interest, publicAddress)
-            setIsAlreadyRegisteredUser(result)
+            setIsAlreadyRegisteredUser(result[0])
         }
 
         fetchIsAlreadyRegisteredUser()
@@ -103,6 +105,10 @@ export default function UserFormModals() {
                                                                     label={'PublicAddress'} id={'publicAddress'}
                                                                     disabled={true}
                                                                     value={publicAddress} onChange={setPublicAddress}/>,
+                                                             <InputFile key={'profileImage'} id={'profileImage'} label={'Profile Image'}
+                                                                        required={true}
+                                                                        accept={"image/jpg, image/jpeg, image/png, image/webp"}
+                                                                        multiple={false} setFile={setFile} setObjectURL={setObjectURL}/>
                                                          ]} action={undefined}/>}
                                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
                                     {!isAlreadyRegisteredUser && <button

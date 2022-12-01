@@ -26,3 +26,26 @@ export const addTrainer = async (name: string, specialty: string, publicAddress:
 
     }
 }
+
+export const getTrainerProfileImage = async (trainerId: string, address?: string) => {
+    try {
+        const {data} = await authAxios.get(
+            '/trainer/profileImage', {
+                params: {
+                    trainerId,
+                    address
+                },
+                responseType: "blob"
+            }
+        )
+
+        return data
+    } catch (error) {
+        console.error(error)
+    }
+    return null
+}
+
+export const uploadProfilePicture = async (trainerId: string, data: any) => {
+
+}
