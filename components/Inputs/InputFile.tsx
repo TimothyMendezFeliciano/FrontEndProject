@@ -1,15 +1,28 @@
 import {useCallback} from "react";
+import Image from "next/image";
 
 type PropTypes = {
     id: string
     accept: string
     multiple: boolean
     required: boolean
+    file: File | undefined
     setFile: any
+    objectURL: string
     setObjectURL: any
     label: string
 }
-export default function InputFile({setFile,accept,required,multiple,label,id,setObjectURL}: PropTypes) {
+export default function InputFile({
+                                      file,
+                                      setFile,
+                                      accept,
+                                      required,
+                                      multiple,
+                                      label,
+                                      id,
+                                      objectURL,
+                                      setObjectURL
+                                  }: PropTypes) {
 
     const validateFile = (file: File) => {
         const validTypes = accept.split(', ')
@@ -36,6 +49,9 @@ export default function InputFile({setFile,accept,required,multiple,label,id,set
         }
     }
     return <>
+        {objectURL && file && <span className={'flex justify-center'}>
+            <Image src={objectURL} width={48} height={48} alt={'Profile'} className={'rounded-full h-12 w-12'} />
+        </span>}
         <label htmlFor={id}>
             <strong>{label}</strong>
             <input

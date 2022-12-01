@@ -7,8 +7,9 @@ import {CheckIcon} from "@heroicons/react/solid";
 import FormCardWithLabel from "../../Forms/CardWithLabel";
 import Input from "../../Inputs/Input";
 import {closeUserModal} from "../userModalSlice";
-import {addTrainee, getIndividualTrainee} from "../../../services/TraineeService";
+import {addTrainee, getIndividualTrainee, uploadProfilePicture} from "../../../services/TraineeService";
 import InputFile from "../../Inputs/InputFile";
+import Image from "next/image";
 
 export default function UserFormModals() {
 
@@ -25,11 +26,11 @@ export default function UserFormModals() {
     const [isAlreadyRegisteredUser, setIsAlreadyRegisteredUser] = useState<boolean>(false)
 
     const registerAsTraineeAction = useCallback(async () => {
-        if (!isAlreadyRegisteredUser) {
+        if (!isAlreadyRegisteredUser && file) {
             const result = await addTrainee(name, interest, publicAddress)
-            return result
+            result && await uploadProfilePicture(result, file, publicAddress)
         }
-    }, [name, interest, publicAddress])
+    }, [name, interest, publicAddress, file])
 
     useEffect(() => {
         if (account) setPublicAddress(account)
@@ -91,25 +92,29 @@ export default function UserFormModals() {
                                             </div>
                                         </div>
                                     </div>
-                                    : <FormCardWithLabel title={'Register'}
-                                                         subtitle={'Complete the form to become a Registered User'}
-                                                         formInputs={[
-                                                             <Input key={'name'} type={'text'} label={'Name'}
-                                                                    id={'name'}
-                                                                    value={name}
-                                                                    onChange={setName}/>,
-                                                             <Input key={'interest'} type={'text'} label={'Interest'}
-                                                                    id={'interest'} value={interest}
-                                                                    onChange={setInterest}/>,
-                                                             <Input key={'publicAddress'} type={'text'}
-                                                                    label={'PublicAddress'} id={'publicAddress'}
-                                                                    disabled={true}
-                                                                    value={publicAddress} onChange={setPublicAddress}/>,
-                                                             <InputFile key={'profileImage'} id={'profileImage'} label={'Profile Image'}
-                                                                        required={true}
-                                                                        accept={"image/jpg, image/jpeg, image/png, image/webp"}
-                                                                        multiple={false} setFile={setFile} setObjectURL={setObjectURL}/>
-                                                         ]} action={undefined}/>}
+                                    : <>
+                                        <FormCardWithLabel title={'Register'}
+                                                           subtitle={'Complete the form to become a Registered User'}
+                                                           formInputs={[
+                                                               <Input key={'name'} type={'text'} label={'Name'}
+                                                                      id={'name'}
+                                                                      value={name}
+                                                                      onChange={setName}/>,
+                                                               <Input key={'interest'} type={'text'} label={'Interest'}
+                                                                      id={'interest'} value={interest}
+                                                                      onChange={setInterest}/>,
+                                                               <Input key={'publicAddress'} type={'text'}
+                                                                      label={'PublicAddress'} id={'publicAddress'}
+                                                                      disabled={true}
+                                                                      value={publicAddress} onChange={setPublicAddress}/>,
+                                                               <InputFile key={'profileImage'} id={'profileImage'} label={'Profile Image'}
+                                                                          required={true}
+                                                                          accept={"image/jpg, image/jpeg, image/png, image/webp"}
+                                                                          multiple={false} setFile={setFile} setObjectURL={setObjectURL} file={file} objectURL={objectURL}/>,
+                                                           ]} action={undefined}/>
+
+                                    </>
+                                }
                                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
                                     {!isAlreadyRegisteredUser && <button
                                         type="button"

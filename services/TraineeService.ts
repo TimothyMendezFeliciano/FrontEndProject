@@ -33,7 +33,7 @@ export const addTrainee = async (name: string, interest: string, publicAddress: 
                     'Content-Type': 'application/json'
                 }
             })
-        return !!data.id
+        return data.id
     } catch (error) {
         console.log(error)
     }
