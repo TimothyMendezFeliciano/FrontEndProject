@@ -106,11 +106,15 @@ export default function UserFormModals() {
                                                                <Input key={'publicAddress'} type={'text'}
                                                                       label={'PublicAddress'} id={'publicAddress'}
                                                                       disabled={true}
-                                                                      value={publicAddress} onChange={setPublicAddress}/>,
-                                                               <InputFile key={'profileImage'} id={'profileImage'} label={'Profile Image'}
+                                                                      value={publicAddress}
+                                                                      onChange={setPublicAddress}/>,
+                                                               <InputFile key={'profileImage'} id={'profileImage'}
+                                                                          label={'Profile Image'}
                                                                           required={true}
                                                                           accept={"image/jpg, image/jpeg, image/png, image/webp"}
-                                                                          multiple={false} setFile={setFile} setObjectURL={setObjectURL} file={file} objectURL={objectURL}/>,
+                                                                          multiple={false} setFile={setFile}
+                                                                          setObjectURL={setObjectURL} file={file}
+                                                                          objectURL={objectURL}/>,
                                                            ]} action={undefined}/>
 
                                     </>

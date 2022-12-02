@@ -4,8 +4,8 @@ import Image from "next/image";
 type PropTypes = {
     id: string
     accept: string
-    multiple: boolean
-    required: boolean
+    multiple?: boolean
+    required?: boolean
     file: File | undefined
     setFile: any
     objectURL: string
@@ -16,8 +16,8 @@ export default function InputFile({
                                       file,
                                       setFile,
                                       accept,
-                                      required,
-                                      multiple,
+                                      required = true,
+                                      multiple = false,
                                       label,
                                       id,
                                       objectURL,

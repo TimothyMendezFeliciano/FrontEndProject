@@ -60,6 +60,19 @@ export const subscriptionNFTABI = [
             {
                 "indexed": false,
                 "internalType": "address",
+                "name": "contentCreator",
+                "type": "address"
+            }
+        ],
+        "name": "CreatorDeregistered",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
                 "name": "creator",
                 "type": "address"
             }
@@ -203,6 +216,13 @@ export const subscriptionNFTABI = [
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "cancelContentCreator",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {

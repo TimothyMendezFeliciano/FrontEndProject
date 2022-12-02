@@ -59,7 +59,7 @@ export const getProfileImage = async (traineeId: string, address?: string) => {
                     traineeId,
                     address
                 },
-                responseType: "blob"
+                // responseType: "blob"
             }
         )
 
@@ -82,7 +82,7 @@ export const uploadProfilePicture = async (traineeId: string, profileImage: File
         const {data} = await authAxios.post('/trainee/profileImage', formData)
         return data
     } catch (error) {
-        console.error(error)
+        console.error("Not Uploading Image",error)
         return null
     }
 }

@@ -11,7 +11,8 @@ import {subscriptionNFTAddress} from "../../../contracts/SubscriptionNFTAddress"
 import {subscriptionNFTABI} from "../../../contracts/SubscriptionNFTABI";
 import {useRouter} from "next/router";
 import {ethers} from "ethers";
-import {addTrainer} from "../../../services/TrainerService";
+import {addTrainer, deleteTrainer, uploadProfilePicture} from "../../../services/TrainerService";
+import InputFile from "../../Inputs/InputFile";
 
 export default function ContentCreatorFormModals() {
 
@@ -20,10 +21,12 @@ export default function ContentCreatorFormModals() {
     const {account} = useWeb3React()
     const dispatch = useAppDispatch()
     const {isOpen} = useAppSelector(state => state.modal)
-    const cancelButtonRef  = useRef(null)
+    const cancelButtonRef = useRef(null)
     const [name, setName] = useState<string>('')
     const [specialty, setSpecialty] = useState<string>('')
     const [publicAddress, setPublicAddress] = useState<string>('')
+    const [file, setFile] = useState<File | undefined>()
+    const [objectURL, setObjectURL] = useState<string>('')
     const [isContentCreator, setIsContentCreator] = useState<boolean>(false)
 
     const registerAsTrainerAction = useCallback(async () => {
@@ -35,9 +38,18 @@ export default function ContentCreatorFormModals() {
             return result
         } catch (error) {
             console.error(error)
-            return error
+            return []
         }
     }, [name, specialty, publicAddress])
+
+    const deregisterAsTrainerAction = useCallback(async () => {
+        try {
+            return isContentCreator &&  await subscriptionNFTContract?.functions.cancelContentCreator()
+        } catch (error) {
+            console.error(error);
+            return []
+        }
+    }, [isContentCreator, publicAddress])
 
     useEffect(() => {
         if (account) setPublicAddress(account)
@@ -55,15 +67,25 @@ export default function ContentCreatorFormModals() {
 
             const onCreatorRegistered = async (contentCreator: string) => {
                 if (account === contentCreator) {
-                    await addTrainer(name, specialty, publicAddress)
+                    const result = await addTrainer(name, specialty, publicAddress)
+                    result && await uploadProfilePicture(result,file, publicAddress)
                     checkIfValid()
                 }
             }
 
+            const onCreatorDeregistered = async (contentCreator: string) => {
+                if(account == contentCreator) {
+                    const result = await deleteTrainer(contentCreator)
+                    result &&checkIfValid()
+                }
+            }
+
             subscriptionNFTContract?.on('CreatorRegistered', onCreatorRegistered)
+            subscriptionNFTContract?.on('CreatorDeregistered', onCreatorDeregistered)
 
             return () => {
                 subscriptionNFTContract?.off('CreatorRegistered', onCreatorRegistered)
+                subscriptionNFTContract?.off('CreatorDeregistered', onCreatorDeregistered)
             }
         }
     }, [subscriptionNFTContract, account, router, name, specialty, publicAddress])
@@ -129,6 +151,14 @@ export default function ContentCreatorFormModals() {
                                                                     label={'PublicAddress'} id={'publicAddress'}
                                                                     disabled={true}
                                                                     value={publicAddress} onChange={setPublicAddress}/>,
+                                                             <InputFile id={'profileImage'}
+                                                                        key={'profileImage'}
+                                                                        label={'Profile Image'}
+                                                                        accept={"image/jpg, image/jpeg, image/png, image/webp"}
+                                                                        multiple={false} required={true} file={file}
+                                                                        setFile={setFile}
+                                                                        objectURL={objectURL}
+                                                                        setObjectURL={setObjectURL}/>
                                                          ]} action={undefined}/>}
                                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
                                     {!isContentCreator && <button
@@ -137,6 +167,13 @@ export default function ContentCreatorFormModals() {
                                         onClick={() => registerAsTrainerAction()}
                                     >
                                         Submit
+                                    </button>}
+                                    {isContentCreator && <button
+                                        type={'button'}
+                                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
+                                        onClick={()=> deregisterAsTrainerAction()}
+                                    >
+                                        Deregister As Content Creator
                                     </button>}
                                     <button
                                         type="button"
