@@ -3,7 +3,7 @@ import Wrapper from "../components/Wrapper";
 import useContract from "../hooks/useContract";
 import BestPracticeAccessABI from "../contracts/BestPracticeAccess.json";
 import {useCallback, useEffect, useState} from "react";
-import {ethers} from "ethers";
+import {BigNumber, ethers, utils} from "ethers";
 import BestPracticeABI from "../contracts/BestPractice.json";
 
 const Home: NextPage = () => {
@@ -12,14 +12,20 @@ const Home: NextPage = () => {
     const bestPracticeAccessContract = useContract(process.env.NEXT_PUBLIC_BEST_PRACTICE_ACCESS_ADDRESS as string, BestPracticeAccessABI)
     const bestPracticeContract = useContract(process.env.NEXT_PUBLIC_BEST_PRACTICE_ADDRESS as string, BestPracticeABI)
 
-    const [callers, setCallers] = useState<[{}]>([{}])
+    const [callers, setCallers] = useState<{ caller: string, callsMade: number }[]>([{caller: '', callsMade: 0}])
+const [eventLaunched, setEventLaunched] = useState(0)
 
     const callTrackEvent = useCallback(async () => {
-        const result = await bestPracticeContract?.functions?.emitEventTracker({
-            value: ethers.utils.parseEther('1')
-        })
+        try {
+            const result = await bestPracticeContract?.functions?.emitEventTracker({
+                value: ethers.utils.parseEther('1')
+            })
+            console.log('Result', result)
 
-        console.log('Result', result)
+        } catch (e) {
+            console.log('Tx Error', e)
+        }
+        setEventLaunched(eventLaunched+1)
     }, [bestPracticeContract])
 
     // BAD
@@ -36,13 +42,16 @@ const Home: NextPage = () => {
     useEffect(() => {
         if (bestPracticeContract) {
             const actionOnEvent = async (caller: string, callsMade: any) => {
-                callers.push({caller, callsMade})
+                const callsMadeAsNumber = BigNumber.from(callsMade).toNumber()
+                setCallers([...callers,
+                    {caller: caller, callsMade: callsMadeAsNumber}
+                ])
             }
 
-            bestPracticeContract.on('TrackEvent', actionOnEvent)
+            bestPracticeContract?.on('TrackEvent', actionOnEvent)
 
             return () => {
-                bestPracticeContract.off('TrackEvent', actionOnEvent)
+                bestPracticeContract?.off('TrackEvent', actionOnEvent)
             }
         }
     }, [bestPracticeContract])
