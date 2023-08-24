@@ -5,6 +5,7 @@ import BestPracticeAccessABI from "../contracts/BestPracticeAccess.json";
 import {useCallback, useEffect, useState} from "react";
 import {BigNumber, ethers, utils} from "ethers";
 import BestPracticeABI from "../contracts/BestPractice.json";
+import account from "../components/Account";
 
 const Home: NextPage = () => {
 
@@ -13,7 +14,7 @@ const Home: NextPage = () => {
     const bestPracticeContract = useContract(process.env.NEXT_PUBLIC_BEST_PRACTICE_ADDRESS as string, BestPracticeABI)
 
     const [callers, setCallers] = useState<{ caller: string, callsMade: number }[]>([{caller: '', callsMade: 0}])
-const [eventLaunched, setEventLaunched] = useState(0)
+    const [eventLaunched, setEventLaunched] = useState(0)
 
     const callTrackEvent = useCallback(async () => {
         try {
@@ -25,7 +26,7 @@ const [eventLaunched, setEventLaunched] = useState(0)
         } catch (e) {
             console.log('Tx Error', e)
         }
-        setEventLaunched(eventLaunched+1)
+        setEventLaunched(eventLaunched + 1)
     }, [bestPracticeContract])
 
     // BAD
@@ -65,8 +66,8 @@ const [eventLaunched, setEventLaunched] = useState(0)
                     </li>
                 ))}
             </ul>
-            <button className={'bg-dark'} onClick={callTrackEvent}>Call Track Event</button>
-        </Wrapper>
+             <button className={'bg-dark'} onClick={callTrackEvent}>Call Track Event</button>
+         </Wrapper>
     )
 }
 

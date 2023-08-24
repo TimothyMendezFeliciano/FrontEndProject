@@ -11,7 +11,6 @@ export default function Header() {
     const triedToEagerConnect = useEagerConnect()
     const router = useRouter()
 
-    const isConnected = typeof account === "string" && !!library
     return (
         <header className="bg-indigo-600">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
